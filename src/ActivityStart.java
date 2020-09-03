@@ -3,7 +3,9 @@
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -27,62 +29,74 @@ public class ActivityStart {
 		
 		try
 		{
-			// File load
-			File file = new File("C:\\IT_Projekty\\Java\\ReadExcelFileToEvenValue\\excel\\vzorek_dat.xlsx");
-			// File file = new File("C:\\IT_Projekty\\Java\\ReadExcelFileToEvenValue\\excel\\students.xlsx");
-			//
-			FileInputStream fis = new FileInputStream(file);
-			// creating Workbook
-			XSSFWorkbook wb = new XSSFWorkbook(fis);
-			// creating sheet page (index)
-			XSSFSheet sheet = wb.getSheetAt(0);
-			// iterating over excel file
-			Iterator<Row> itr = sheet.iterator();
-			//
-			while(itr.hasNext())
+			try
 			{
-				Row row = itr.next();
-				// iterating over each column
-				Iterator<Cell> cellIterator = row.cellIterator();
-				// getColumn disable
-				// Iterator<Cell> cellIterator = row.getCell(1);
-				while(cellIterator.hasNext())
+				// File load
+				@SuppressWarnings("resource")
+				Scanner scanner = new Scanner(System.in);
+				//
+				FileInputStream fis = new FileInputStream(scanner.nextLine());
+				// creating Workbook
+				XSSFWorkbook wb = new XSSFWorkbook(fis);
+				// creating sheet page (index)
+				XSSFSheet sheet = wb.getSheetAt(0);
+				// iterating over excel file
+				Iterator<Row> itr = sheet.iterator();
+				//
+				while(itr.hasNext())
 				{
-					Cell cell = cellIterator.next();
-					//
-					switch(cell.getCellTypeEnum())
+					Row row = itr.next();
+					// iterating over each column
+					Iterator<Cell> cellIterator = row.cellIterator();
+					// getColumn disable
+					// Iterator<Cell> cellIterator = row.getCell(1);
+					while(cellIterator.hasNext())
 					{
-					case NUMERIC:
-						// numeric data, from excel.file
-						double xXx = cell.getNumericCellValue();
-						startStage.convertFromDouble = (int)xXx;
-						numData.checkNumber(startStage.convertFromDouble);
-						break;
-						
-					case STRING:
-						// System.out.print(cell.getStringCellValue() + "\t\t\t");
-						try
+						Cell cell = cellIterator.next();
+						//
+						switch(cell.getCellTypeEnum())
 						{
-							startStage.cellStringValue = cell.getStringCellValue();
-							startStage.convertFromString = Integer.parseInt(startStage.cellStringValue);
-							//
-							numData.checkNumber(startStage.convertFromString);
+						case NUMERIC:
+							// numeric data, from excel.file
+							double xXx = cell.getNumericCellValue();
+							startStage.convertFromDouble = (int)xXx;
+							if(numData.primeNumber(startStage.convertFromDouble) != false)
+							{
+								System.out.println(startStage.convertFromDouble + " : je prvocislo! ");
+							}
+							break;
+							
+						case STRING:
+							// System.out.print(cell.getStringCellValue() + "\t\t\t");
+							try
+							{
+								startStage.cellStringValue = cell.getStringCellValue();
+								startStage.convertFromString = Integer.parseInt(startStage.cellStringValue);
+								//
+								if(numData.primeNumber(startStage.convertFromString) != false)
+								{
+									System.out.println(startStage.convertFromString + " : je prvocislo! ");
+								}
+							}
+							catch(NumberFormatException exc)
+							{
+								// ignore
+								// exc.printStackTrace();
+							}
+							break;
+							
+						default:
+							break;
 						}
-						catch(NumberFormatException exc)
-						{
-							// ignore
-							// exc.printStackTrace();
-						}
-						break;
-						
-					default:
-						break;
 					}
 				}
+				wb.close();
 			}
-			wb.close();
-			
-			
+			catch(FileNotFoundException excFile)
+			{
+				excFile.printStackTrace();
+			}
+				
 		}
 		catch(Exception exception)
 		{

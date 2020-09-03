@@ -1,7 +1,6 @@
 
 public class NumericData 
 {
-	
 	/**
 	 * constructor
 	 */
@@ -10,27 +9,21 @@ public class NumericData
 	}
 	
 	
+	
 	/**
-	 * function checkNumber(number)
-	 * @param number
+	 * function primeNumber(value)
+	 * @param value
+	 * @return boolean
 	 */
-	public void checkNumber(int number)
+	public boolean primeNumber(int value)
 	{
-		try
+		for(int i = 2; i <= value/2; i++)
 		{
-			if(number % 2 == 0)
+			if(value % i == 0)
 			{
-				// SUDE CISLO - Ignored
-				// System.out.print("Sude cislo: " + number + " \n");
-			}
-			else
-			{
-				System.out.print("Liche cislo: " + number + "\n");
+				return true;
 			}
 		}
-		catch(Exception exc)
-		{
-			exc.printStackTrace();
-		}
+		return false;
 	}
 }
